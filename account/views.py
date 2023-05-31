@@ -33,7 +33,7 @@ def Register(request):
             password = form.cleaned_data["password"]
             password2 = form.cleaned_data["password2"]
             if password == password2:
-                user.set_password(password2)
+                user.set_password(password)
             else:
                 pass
             user.save()

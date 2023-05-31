@@ -5,7 +5,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Login</title>
+    <title>Register</title>
     <style>
         /* Universal Selectors */
         #root, body, html {
@@ -408,27 +408,38 @@
                   <form class="form" method="post">
                     {% csrf_token %}
                     <div class="input-box">
-                      <input type="text" id="name" aria-describedby="" placeholder="Phone number, username, or email"
+                      <input type="text" id="name" aria-describedby="" placeholder="Inter Your Phone"
+                             aria-required="true" maxlength="30" autocapitalize="off" autocorrect="off" name="phone"
+                             value="" required>
+                    </div>
+                    <div class="input-box">
+                      <input type="email" id="name" aria-describedby="" placeholder="Inter Your Email"
+                             aria-required="true" maxlength="30" autocapitalize="off" autocorrect="off" name="email"
+                             value="" required>
+                    </div>
+                      <div class="input-box">
+                      <input type="text" id="name" aria-describedby="" placeholder="Inter Your Username"
                              aria-required="true" maxlength="30" autocapitalize="off" autocorrect="off" name="username"
                              value="" required>
                     </div>
-
                     <div class="input-box">
-                      <input type="password" name="password" id="password" placeholder="Password" aria-describedby=""
+                      <input type="password" name="password" id="password" placeholder="Inter password" aria-describedby=""
                              maxlength="30" aria-required="true" autocapitalize="off" autocorrect="off" required>
                     </div>
-                    <input type="hidden" name="next" value="{{ next }}">
+                      <div class="input-box">
+                      <input type="password" name="password2" id="password" placeholder="Inter Password Confirm" aria-describedby=""
+                             maxlength="30" aria-required="true" autocapitalize="off" autocorrect="off" required>
+                    </div>
                     <span class="button-box">
-                      <button class="btn" type="submit" name="submit">Log in</button>
+                      <button class="btn" type="submit" name="submit">Sing up</button>
                     </span>
-
                     <a class="forgot" href="{% url "password_reset" %}">Forgot password?</a>
                   </form>
                 </div> <!-- Form-wrap end -->
               </div> <!-- Login-box end -->
 
               <div class="login-box">
-                <p class="text">Don't have an account?<a href="{% url "register" %}">Sign up</a></p>
+                <p class="text">Don't have an account?<a href="{% url "login" %}">login</a></p>
               </div> <!-- Signup-box end -->
 
               <div class="app">
