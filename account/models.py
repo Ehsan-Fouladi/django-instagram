@@ -54,6 +54,9 @@ class User(AbstractBaseUser):
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
+    photo = models.ImageField(upload_to='Users/%Y/%m/%d', null=True)
+    date_of_birth = models.DateField(blank=True, null=True)
+    bio = models.TextField(null=True, blank=True)
 
     objects = UserManager()
 

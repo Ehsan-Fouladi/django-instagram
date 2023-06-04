@@ -8,6 +8,7 @@ urlpatterns = [
     path("register/", views.Register, name="register"),
     path("login/", auth_view.LoginView.as_view(), name="login"),
     path("profile/", views.Profile, name="profile"),
+    path("profile/edit/", views.ProfileEdit, name="profile_edit"),
     path("logout/", auth_view.LogoutView.as_view(), name="logout"),
     # Password Change
     path("password_change/", auth_view.PasswordChangeView.as_view(), name="password_change"),

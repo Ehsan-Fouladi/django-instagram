@@ -404,7 +404,15 @@
                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Instagram_logo.svg/1200px-Instagram_logo.svg.png"
                        alt="Instagram">
                 </div><!-- Header end -->
-                <div class="form-wrap">
+
+                  {% if messages %}
+                      <ul>
+                            {% for message in messages %}
+                                <li>{{ message }}</li>
+                            {% endfor %}
+                      </ul>
+                  {% endif %}
+                  <div class="form-wrap">
                   <form class="form" method="post">
                     {% csrf_token %}
                     <div class="input-box">
@@ -423,11 +431,13 @@
                              value="" required>
                     </div>
                     <div class="input-box">
-                      <input type="password" name="password" id="password" placeholder="Inter password" aria-describedby=""
+                      <input type="password" name="password" id="password" placeholder="Inter password"
+                             aria-describedby=""
                              maxlength="30" aria-required="true" autocapitalize="off" autocorrect="off" required>
                     </div>
                       <div class="input-box">
-                      <input type="password" name="password2" id="password" placeholder="Inter Password Confirm" aria-describedby=""
+                      <input type="password" name="password2" id="password" placeholder="Inter Password Confirm"
+                             aria-describedby=""
                              maxlength="30" aria-required="true" autocapitalize="off" autocorrect="off" required>
                     </div>
                     <span class="button-box">
@@ -446,10 +456,10 @@
                 <p>Get the app.</p>
                 <div class="app-img">
                   <a href="https://itunes.apple.com/app/instagram/id389801252?pt=428156&amp;ct=igweb.loginPage.badge&amp;mt=8">
-                    <img src="https://www.instagram.com/static/images/appstore-install-badges/badge_ios_english-en.png/4b70f6fae447.png">
+                    <img src="">
                   </a>
                   <a href="https://play.google.com/store/apps/details?id=com.instagram.android&amp;referrer=utm_source%3Dinstagramweb%26utm_campaign%3DloginPage%26utm_medium%3Dbadge">
-                    <img src="https://www.instagram.com/static/images/appstore-install-badges/badge_android_english-en.png/f06b908907d5.png">
+                    <img src="">
                   </a>
                 </div>  <!-- App-img end-->
               </div> <!-- App end -->
