@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
 from .models import User
-
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 class UserCreationForm(forms.ModelForm):
     password1 = forms.CharField(label="Password", widget=forms.PasswordInput)
@@ -53,3 +53,6 @@ class ProfileForms(forms.ModelForm):
     class Meta:
         model = User
         fields = ["first_name", "last_name", 'bio', 'username', 'photo']
+
+class VerifyCodeForm(forms.Form):
+    code = forms.IntegerField(validators=[MinValueValidator(11111), MaxValueValidator(99999)])

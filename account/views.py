@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
-from .forms import LoginForm, RegisterForm, ProfileForms
+from .forms import LoginForm, RegisterForm, ProfileForms, VerifyCodeForm
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from random import randint
 
 
 def LoginUser(request):
@@ -41,10 +42,31 @@ def Register(request):
                 messages.error(request, "password dosn`t match!")
                 return render(request, "account/register.html", {"form": form})
             user.save()
-            return render(request, "account/register_done.html", {"user": user})
+            login(request, user)
+            verify_code = randint(11111, 99999)
+            request.session["verify"] = verify_code
+            print(request.session["verify"])
+            return redirect("verify_register")
     else:
         form = RegisterForm()
     return render(request, "account/register.html", {"form": form})
+
+
+def Verify_Register(request):
+    if request.method == "POST":
+        form = VerifyCodeForm(request.POST)
+        if form.is_valid():
+            verify_code = form.cleaned_data["code"]
+            if verify_code == request.session["verify"]:
+                user = request.user
+                user.is_verify = True
+                user.save()
+                return redirect("profile")
+            else:
+                messages.error(request, "Code is Invalid")
+    else:
+        form = VerifyCodeForm()
+        return render(request, "account/verify.html", {"form": form})
 
 
 @login_required

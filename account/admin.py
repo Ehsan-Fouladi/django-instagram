@@ -15,7 +15,7 @@ class UserAdmin(BaseUserAdmin):
     fieldsets = [
         (None, {"fields": ["email", "username", "password"]}),
         ("Personal info", {"fields": ["phone", "first_name", "last_name", 'photo', 'date_of_birth', 'bio']}),
-        ("Permissions", {"fields": ["is_admin", "is_staff", "is_active", "is_superuser"]}),
+        ("Permissions", {"fields": ["is_admin", "is_staff", "is_active", "is_superuser", "is_verify"]}),
     ]
     search_fields = ["email", "username"]
     ordering = ["username", "phone"]

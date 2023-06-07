@@ -51,10 +51,11 @@ class User(AbstractBaseUser):
     date_joined = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True)
+    is_verify = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
-    photo = models.ImageField(upload_to='Users/%Y/%m/%d', null=True)
+    photo = models.ImageField(upload_to='Users/%Y/%m/%d', null=True, blank=True)
     date_of_birth = models.DateField(blank=True, null=True)
     bio = models.TextField(null=True, blank=True)
 
