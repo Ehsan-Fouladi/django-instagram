@@ -17,14 +17,15 @@ def LoginUser(request):
             if user is not None:
                 if user.is_active:
                     login(request, user)
-                    return HttpResponse("Login succese")
+                    messages.success(request, "Your is login success full")
+                    return render(request, "account/profile.html", {})
                 else:
                     return HttpResponse("Error login")
             else:
-                return HttpResponse("Invaild User")
+                return HttpResponse("Invalid User")
     else:
         form = LoginForm()
-        return render(request, "account/login.html", {'form': form})
+        return render(request, "registration/login.html", {'form': form})
 
 
 def Register(request):

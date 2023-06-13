@@ -13,15 +13,24 @@
 <body>
 <header>
     <div class="container">
-
-    {% if messages %}
-        <ur>
-            {% for message in messages %}
-            <li>{{ message }}</li>
-            {% endfor %}
-
-        </ur>
-    {% endif %}
+        {% if messages %}
+                {% for message in messages %}
+                        {% if message.tags %}
+                            {% if message.tags == "success" %}
+                                <script src="{% static "javascript/sweatalert.min.js" %}"></script>
+                                <script>
+                                    Swal.fire({
+                                        position: 'top-end',
+                                        icon: '{{ message.tags }}',
+                                        title: '{{ message }}',
+                                        showConfirmButton: false,
+                                        timer: 3000
+                                    })
+                                </script>
+                            {% endif %}
+                        {% endif %}
+                {% endfor %}
+        {% endif %}
         <div class="profile">
             {% if request.user.photo %}
                 <div class="profile-image">
@@ -34,7 +43,8 @@
             {% endif %}
             <div class="profile-user-settings">
                 <h1 class="profile-user-name">{{ request.user.username }}</h1>
-                <a class="btn profile-edit-btn" href="{% url "profile_edit" %}" style="text-decoration: none" target="_blank">ویرایش پروفایل</a>
+                <a class="btn profile-edit-btn" href="{% url "profile_edit" %}" style="text-decoration: none"
+                   target="_blank">ویرایش پروفایل</a>
                 <button class="btn profile-settings-btn" aria-label="profile settings"><i class="fa fa-cog"
                                                                                           aria-hidden="true"></i>
                 </button>
@@ -47,7 +57,9 @@
                 </ul>
             </div>
             <div class="profile-bio">
-                <p><span class="profile-real-name">{{ request.user.first_name }}-{{ request.user.last_name }}</span>️: {{ request.user.bio }}</p>
+                <p><span
+                        class="profile-real-name">{{ request.user.first_name }}-{{ request.user.last_name }}</span>️: {{ request.user.bio }}
+                </p>
             </div>
         </div>
         <!-- End of profile section -->
