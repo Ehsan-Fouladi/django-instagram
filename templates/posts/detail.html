@@ -1,0 +1,38 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Detail {{ user.username }}</title>
+    <link type="text/css" rel="stylesheet" href="{% static "css/font-awesome.min.css" %}"/>
+</head>
+<body>
+<div style="display: flex; flex-direction: column;">
+    <a href="{% url "profile" post.user.username %}" style="text-decoration: none; color: black"><h2>{{ post.user }}</h2></a>
+    <hr>
+    <img src="{{ post.image.url }}" alt="image">
+    <div>
+        <a href="" style="color: black"><i class="fa fa-heart-o" onclick="like()" id="like"></i></a>
+        <a href="" style="color: black"><i class="fa fa-share-alt" ></i></a>
+        <a href="" style="color: black"><i class="fa fa-comment-o" ></i></a>
+        <a href="" style="color: black; display: flex; justify-content:end"><i class="fa fa-save"></i></a>
+    </div>
+    <div>
+        <span><h3>{{ post.user }}</h3><p>{{ post.caption }}</p></span>
+    </div>
+</div>
+<script>
+    let like = ()=>{
+        let elem = document.getElementById("like")
+        elem.classList.toggle("fa fa-heart-o")
+        {#if(elem.classList.contains("fa fa-heart")){#}
+        {#    elem.classList.remove("fa fa-heart")#}
+        {#else{#}
+        {#    elem.classList.add("fa fa-heart")#}
+    }
+</script>
+</body>
+</html>

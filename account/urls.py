@@ -8,7 +8,7 @@ urlpatterns = [
     path("register/", views.Register, name="register"),
     # path("login/", auth_view.LoginView.as_view(), name="login"),
     path("verify/", views.Verify_Register, name="verify_register"),
-    path("profile/", views.Profile, name="profile"),
+    path("<str:username>/", views.Profile, name="profile"),
     path("profile/edit/", views.ProfileEdit, name="profile_edit"),
     path("logout/", auth_view.LogoutView.as_view(), name="logout"),
     # Password Change

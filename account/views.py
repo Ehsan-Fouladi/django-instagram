@@ -5,6 +5,8 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from random import randint
+from .models import User
+from post.forms import PostCreateForm
 
 
 def LoginUser(request):
@@ -62,7 +64,7 @@ def Verify_Register(request):
                 user = request.user
                 user.is_verify = True
                 user.save()
-                return redirect("profile")
+                return redirect("profile", request.user)
             else:
                 messages.error(request, "Code is Invalid")
     else:
@@ -71,8 +73,13 @@ def Verify_Register(request):
 
 
 @login_required
-def Profile(reqeust):
-    return render(reqeust, "account/profile.html", {})
+def Profile(reqeust, username):
+    form = PostCreateForm()
+    try:
+        user = User.objects.get(username=username)
+    except:
+        return render(reqeust, "account/not_user.html")
+    return render(reqeust, "account/profile.html", {"user": user, "form": form})
 
 
 @login_required
@@ -82,7 +89,7 @@ def ProfileEdit(reqeust):
         if form.is_valid():
             form.save()
             messages.success(reqeust, "Edit Profile successfully")
-            return redirect('profile')
+            return redirect('profile', reqeust.user)
         else:
             messages.error(reqeust, "Error Updating Your Profile")
     else:

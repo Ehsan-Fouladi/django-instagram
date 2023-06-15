@@ -14,22 +14,22 @@
 <header>
     <div class="container">
         {% if messages %}
-                {% for message in messages %}
-                        {% if message.tags %}
-                            {% if message.tags == "success" %}
-                                <script src="{% static "javascript/sweatalert.min.js" %}"></script>
-                                <script>
-                                    Swal.fire({
-                                        position: 'top-end',
-                                        icon: '{{ message.tags }}',
-                                        title: '{{ message }}',
-                                        showConfirmButton: false,
-                                        timer: 3000
-                                    })
-                                </script>
-                            {% endif %}
-                        {% endif %}
-                {% endfor %}
+            {% for message in messages %}
+                {% if message.tags %}
+                    {% if message.tags == "success" %}
+                        <script src="{% static "javascript/sweatalert.min.js" %}"></script>
+                        <script>
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: '{{ message.tags }}',
+                                title: '{{ message }}',
+                                showConfirmButton: false,
+                                timer: 3000
+                            })
+                        </script>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
         {% endif %}
         <div class="profile">
             {% if request.user.photo %}
@@ -42,16 +42,22 @@
                 </div>
             {% endif %}
             <div class="profile-user-settings">
-                <h1 class="profile-user-name">{{ request.user.username }}</h1>
-                <a class="btn profile-edit-btn" href="{% url "profile_edit" %}" style="text-decoration: none"
-                   target="_blank">ویرایش پروفایل</a>
+                <h1 class="profile-user-name">{{ user.username }}</h1>
+                {% if request.user == user %}
+                    <a class="btn profile-edit-btn" href="{% url "profile_edit" %}" style="text-decoration: none"
+                       target="_blank">ویرایش پروفایل</a>
+                    <button class="btn profile-settings-btn" aria-label="profile settings" onclick="create_post()"><i
+                        class="fa fa-plus-square"
+                        aria-hidden="true"></i>
+                </button>
+                {% endif %}
                 <button class="btn profile-settings-btn" aria-label="profile settings"><i class="fa fa-cog"
                                                                                           aria-hidden="true"></i>
                 </button>
             </div>
             <div class="profile-stats">
                 <ul>
-                    <li><span class="profile-stat-count">164</span> ارسال</li>
+                    <li><span class="profile-stat-count">{{ user.user_post.all|length }}</span> ارسال</li>
                     <li><span class="profile-stat-count">188</span> دنبال کننده</li>
                     <li><span class="profile-stat-count">206</span> دنبال شده</li>
                 </ul>
@@ -69,197 +75,41 @@
 <main>
     <div class="container">
         <div class="gallery">
-            <div class="gallery-item" tabindex="0">
-                <img src="{% static "pics/photo-1511765224389-37f0e77cf0eb.jfif" %}" class="gallery-image" alt="">
-                <div class="gallery-item-info">
-                    <ul>
-                        <li class="gallery-item-likes"><span class="visually-hidden">Likes:</span><i class="fa fa-heart"
-                                                                                                     aria-hidden="true"></i>
-                            56
-                        </li>
-                        <li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i
-                                class="fa fa-comment" aria-hidden="true"></i> 2
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="gallery-item" tabindex="0">
-                <img src="{% static "pics/photo-1497445462247-4330a224fdb1.jfif" %}" class="gallery-image" alt="">
-                <div class="gallery-item-info">
-                    <ul>
-                        <li class="gallery-item-likes"><span class="visually-hidden">Likes:</span><i class="fa fa-heart"
-                                                                                                     aria-hidden="true"></i>
-                            89
-                        </li>
-                        <li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i
-                                class="fa fa-comment" aria-hidden="true"></i> 5
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="gallery-item" tabindex="0">
-                <img src="{% static "pics/photo-1426604966848-d7adac402bff.jfif" %}" class="gallery-image" alt="">
-                <div class="gallery-item-type">
-                    <span class="visually-hidden">Gallery</span><i class="fa fa-clone" aria-hidden="true"></i>
-                </div>
-                <div class="gallery-item-info">
-                    <ul>
-                        <li class="gallery-item-likes"><span class="visually-hidden">Likes:</span><i class="fa fa-heart"
-                                                                                                     aria-hidden="true"></i>
-                            42
-                        </li>
-                        <li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i
-                                class="fa fa-comment" aria-hidden="true"></i> 1
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="gallery-item" tabindex="0">
-                <img src="{% static "pics/photo-1502630859934-b3b41d18206c.jfif" %}" class="gallery-image" alt="">
-                <div class="gallery-item-type">
-                    <span class="visually-hidden">Video</span><i class="fa fa-video" aria-hidden="true"></i>
-                </div>
-                <div class="gallery-item-info">
-                    <ul>
-                        <li class="gallery-item-likes"><span class="visually-hidden">Likes:</span><i class="fa fa-heart"
-                                                                                                     aria-hidden="true"></i>
-                            38
-                        </li>
-                        <li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i
-                                class="fa fa-comment" aria-hidden="true"></i> 0
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="gallery-item" tabindex="0">
-                <img src="{% static "pics/photo-1498471731312-b6d2b8280c61.jfif" %}" class="gallery-image" alt="">
-                <div class="gallery-item-type">
-                    <span class="visually-hidden">Gallery</span><i class="fa fa-clone" aria-hidden="true"></i>
-                </div>
-                <div class="gallery-item-info">
-                    <ul>
-                        <li class="gallery-item-likes"><span class="visually-hidden">Likes:</span><i class="fa fa-heart"
-                                                                                                     aria-hidden="true"></i>
-                            47
-                        </li>
-                        <li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i
-                                class="fa fa-comment" aria-hidden="true"></i> 1
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="gallery-item" tabindex="0">
-                <img src="{% static "pics/photo-1515023115689-589c33041d3c.jfif" %}" class="gallery-image" alt="">
-                <div class="gallery-item-info">
-                    <ul>
-                        <li class="gallery-item-likes"><span class="visually-hidden">Likes:</span><i class="fa fa-heart"
-                                                                                                     aria-hidden="true"></i>
-                            94
-                        </li>
-                        <li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i
-                                class="fa fa-comment" aria-hidden="true"></i> 3
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="gallery-item" tabindex="0">
-                <img src="{% static "pics/photo-1504214208698-ea1916a2195a.jfif" %}" class="gallery-image" alt="">
-                <div class="gallery-item-type">
-                    <span class="visually-hidden">Gallery</span><i class="fa fa-clone" aria-hidden="true"></i>
-                </div>
-                <div class="gallery-item-info">
-                    <ul>
-                        <li class="gallery-item-likes"><span class="visually-hidden">Likes:</span><i class="fa fa-heart"
-                                                                                                     aria-hidden="true"></i>
-                            52
-                        </li>
-                        <li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i
-                                class="fa fa-comment" aria-hidden="true"></i> 4
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="gallery-item" tabindex="0">
-                <img src="{% static "pics/photo-1515814472071-4d632dbc5d4a.jfif" %}" class="gallery-image" alt="">
-                <div class="gallery-item-info">
-                    <ul>
-                        <li class="gallery-item-likes"><span class="visually-hidden">Likes:</span><i class="fa fa-heart"
-                                                                                                     aria-hidden="true"></i>
-                            66
-                        </li>
-                        <li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i
-                                class="fa fa-comment" aria-hidden="true"></i> 2
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="gallery-item" tabindex="0">
-                <img src="{% static "pics/photo-1511407397940-d57f68e81203.jfif" %}" class="gallery-image" alt="">
-                <div class="gallery-item-type">
-                    <span class="visually-hidden">Gallery</span><i class="fa fa-clone" aria-hidden="true"></i>
-                </div>
-                <div class="gallery-item-info">
-                    <ul>
-                        <li class="gallery-item-likes"><span class="visually-hidden">Likes:</span><i class="fa fa-heart"
-                                                                                                     aria-hidden="true"></i>
-                            45
-                        </li>
-                        <li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i
-                                class="fa fa-comment" aria-hidden="true"></i> 0
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="gallery-item" tabindex="0">
-                <img src="{% static "pics/photo-1518481612222-68bbe828ecd1.jfif" %}" class="gallery-image" alt="">
-                <div class="gallery-item-info">
-                    <ul>
-                        <li class="gallery-item-likes"><span class="visually-hidden">Likes:</span><i class="fa fa-heart"
-                                                                                                     aria-hidden="true"></i>
-                            34
-                        </li>
-                        <li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i
-                                class="fa fa-comment" aria-hidden="true"></i> 1
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="gallery-item" tabindex="0">
-                <img src="{% static "pics/photo-1505058707965-09a4469a87e4.jfif" %}" class="gallery-image" alt="">
-                <div class="gallery-item-info">
-                    <ul>
-                        <li class="gallery-item-likes"><span class="visually-hidden">Likes:</span><i class="fa fa-heart"
-                                                                                                     aria-hidden="true"></i>
-                            41
-                        </li>
-                        <li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i
-                                class="fa fa-comment" aria-hidden="true"></i> 0
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="gallery-item" tabindex="0">
-                <img src="{% static "pics/photo-1423012373122-fff0a5d28cc9.jfif" %}" class="gallery-image" alt="">
-                <div class="gallery-item-type">
-                    <span class="visually-hidden">Video</span><i class="fa fa-video" aria-hidden="true"></i>
-                </div>
-                <div class="gallery-item-info">
-                    <ul>
-                        <li class="gallery-item-likes"><span class="visually-hidden">Likes:</span><i class="fa fa-heart"
-                                                                                                     aria-hidden="true"></i>
-                            30
-                        </li>
-                        <li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i
-                                class="fa fa-comment" aria-hidden="true"></i> 2
-                        </li>
-                    </ul>
-                </div>
-            </div>
+            {% for post in user.user_post.all %}
+                <a class="gallery-item" tabindex="0" href="{{ post.get_absolute_url }}">
+                    <img src="{{ post.image.url }}" class="gallery-image" alt="">
+                    <div class="gallery-item-info">
+                        <ul>
+                            <li class="gallery-item-likes"><span class="visually-hidden">Likes:</span><i
+                                    class="fa fa-heart"
+                                    aria-hidden="true"></i>
+                                {{ post.user_like.all|length }}
+                            </li>
+                            <li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i
+                                    class="fa fa-comment" aria-hidden="true"></i> 2
+                            </li>
+                        </ul>
+                    </div>
+                </a>
+            {% endfor %}
         </div>
         <!-- End of gallery -->
         <div class="loader"></div>
     </div>
     <!-- End of container -->
 </main>
+<script src="{% static "javascript/sweatalert.min.js" %}"></script>
+<script>
+    let create_post = () => {
+        Swal.fire({
+            title: "Create Form",
+            showConfirmButton: false,
+            html: `<form action={% url "post:create" %} method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+            <button type="submit">create</button></form>`,
+        })
+    }
+</script>
 </body>
 </html>
