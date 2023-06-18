@@ -20,7 +20,7 @@ def LoginUser(request):
                 if user.is_active:
                     login(request, user)
                     messages.success(request, "Your is login success full")
-                    return render(request, "account/profile.html", {})
+                    return redirect("profile", request.user)
                 else:
                     return HttpResponse("Error login")
             else:

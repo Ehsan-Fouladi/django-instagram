@@ -11,28 +11,53 @@
 </head>
 <body>
 <div style="display: flex; flex-direction: column;">
-    <a href="{% url "profile" post.user.username %}" style="text-decoration: none; color: black"><h2>{{ post.user }}</h2></a>
+    <a href="{% url "profile" post.user.username %}" style="text-decoration: none; color: black">
+        <h2>{{ post.user }}</h2></a>
     <hr>
     <img src="{{ post.image.url }}" alt="image">
     <div>
-        <a href="" style="color: black"><i class="fa fa-heart-o" onclick="like()" id="like"></i></a>
-        <a href="" style="color: black"><i class="fa fa-share-alt" ></i></a>
-        <a href="" style="color: black"><i class="fa fa-comment-o" ></i></a>
-        <a href="" style="color: black; display: flex; justify-content:end"><i class="fa fa-save"></i></a>
+        <a href="#" style="color: red; font-size: 26px;"><i
+                {% if request.user in post.user_like.all %}class="fa fa-heart"{% else %}class="fa fa-heart-o"{% endif %}
+                data-id="{{ post.id }}"
+                data-action="{% if request.user in post.user_like.all %}dislike{% else %}like{% endif %}" id="like"></i></a>
+        <a href="#" style="color: blue; font-size: 26px;"><i class="fa fa-share-alt"></i></a>
+        <a href="#" style="color: blue; font-size: 26px;"><i class="fa fa-comment-o"></i></a>
+        <a href="#" style="color: blue; font-size: 26px; display: flex; justify-content:end"><i class="fa fa-save"></i></a>
     </div>
+    {% if post.user_like.all|length > 0 %}
+        <h3>{% if post.user_like.all|length > 1 %}
+            Likes : {{ post.user_like.all|length }}
+        {% elif post.user_like.all|length == 1 %}
+            Like: {{ post.user_like.all|length }}
+        {% else %}
+        {% endif %}</h3>
+    {% endif %}
     <div>
         <span><h3>{{ post.user }}</h3><p>{{ post.caption }}</p></span>
     </div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js"></script>
 <script>
-    let like = ()=>{
-        let elem = document.getElementById("like")
-        elem.classList.toggle("fa fa-heart-o")
-        {#if(elem.classList.contains("fa fa-heart")){#}
-        {#    elem.classList.remove("fa fa-heart")#}
-        {#else{#}
-        {#    elem.classList.add("fa fa-heart")#}
-    }
+    let btn_Like = document.querySelector("i");
+    btn_Like.addEventListener("click", e => {
+        e.preventDefault()
+        let fd = new FormData()
+        let action = btn_Like.getAttribute("data-action")
+        fd.append("id", btn_Like.getAttribute("data-id"));
+        fd.append("action", action)
+        fd.append("csrfmiddlewaretoken", "{{ csrf_token }}")
+        axios.post("/post/like/", fd).then(() => {
+            if (action == "like") {
+                btn_Like.setAttribute("data-action", "dislike")
+                btn_Like.className = "fa fa-heart"
+            } else {
+                btn_Like.setAttribute("data-action", "like")
+                btn_Like.className = "fa fa-heart-o"
+            }
+        }).catch(() => {
+            console.log("Error")
+        })
+    })
 </script>
 </body>
 </html>

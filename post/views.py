@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .forms import PostCreateForm
 from .models import Post
 from django.contrib.auth.decorators import login_required
-
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse
 
 @login_required
 def post_create(request):
@@ -21,3 +22,19 @@ def post_create(request):
 def post_detail(request, id, slug):
     post = get_object_or_404(Post, id=id, slug=slug)
     return render(request, "posts/detail.html", {"post": post})
+@login_required
+@require_POST
+def post_like(request):
+    post_id = request.POST.get("id")
+    action = request.POST.get("action")
+    if post_id and action:
+        try:
+            post = Post.objects.get(id=post_id)
+            if action == "like":
+                post.user_like.add(request.user)
+            else:
+                post.user_like.remove(request.user)
+            return JsonResponse({"like": "your like ok"})
+        except:
+            pass
+        return JsonResponse({"Error": "Your like not Found"})
