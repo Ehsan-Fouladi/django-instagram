@@ -35,7 +35,34 @@
     <div>
         <span><h3>{{ post.user }}</h3><p>{{ post.caption }}</p></span>
     </div>
+    <div class="comment-form">
+        <form action="" method="POST">
+            {% csrf_token %}
+            <textarea name="text" id="comment-textarea-id" class="comment-textarea"
+                      placeholder="Comment here" rows="10" cols="70"></textarea>
+            <button class="comment-submit" id="comment-submit-id" type="submit">post</button>
+        </form>
+    </div>
 </div>
+<div id="comments-container-id">
+  <div class="comments">
+    <div class="comment-profile">
+        <img src="" alt="">
+    </div>
+    <div class="comment-main">
+        <div class="comment-text">
+            <a class="user" href=""><strong></strong></a>
+        </div>
+        <div class="comment-info">
+            <div class="comment-date"></div>
+            <div class="comment-likes">
+                <span class="like-counts"></span> <span class="like-word">Likes</span>
+                <span class="like-counts"></span> <span class="like-word">Like</span>
+            </div>
+            <div class="comment-reply">Reply</div>
+        </div>
+    </div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js"></script>
 <script>
     let btn_Like = document.querySelector("i");
