@@ -32,9 +32,9 @@
             {% endfor %}
         {% endif %}
         <div class="profile">
-            {% if request.user.photo %}
+            {% if user.photo %}
                 <div class="profile-image">
-                    <img src="{{ request.user.photo.url }}" class="gallery-image">
+                    <img src="{{ user.photo.url }}" class="gallery-image">
                 </div>
             {% else %}
                 <div class="profile-image">

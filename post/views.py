@@ -24,13 +24,33 @@ def post_detail(request, id, slug):
     post = get_object_or_404(Post, id=id, slug=slug)
     form = PostCommentForm()
     if request.method == "POST":
-        form = PostCommentForm(request.POST)
-        if form.is_valid():
-            new_comment = form.save(commit=False)
-            new_comment.user = request.user
-            new_comment.post = post
-            new_comment.save()
-            return render(request, "posts/detail.html", {"post": post, "form": form})
+        try:
+            action = request.POST.get("action")
+            comment_id = request.POST.get("id")
+        except:
+            action = None
+            comment_id = None
+        if action and comment_id:
+            try:
+                comment = Comments.objects.get(id=comment_id)
+                if action == "like":
+                    comment.likes.add(request.user)
+                else:
+                    comment.likes.remove(request.user)
+                return JsonResponse({"status": "comment successfully!"})
+            except:
+                return JsonResponse({"status": "Error"})
+        else:
+            form = PostCommentForm(request.POST)
+            if form.is_valid():
+                try:
+                    new_comment = form.save(commit=False)
+                    new_comment.user = request.user
+                    new_comment.post = post
+                    new_comment.save()
+                    return JsonResponse({"status": "post successfully!"})
+                except:
+                    return JsonResponse({"status": "Error"})
     else:
         return render(request, "posts/detail.html", {"post": post, "form": form})
 
@@ -47,7 +67,7 @@ def post_like(request):
                 post.user_like.add(request.user)
             else:
                 post.user_like.remove(request.user)
-            return JsonResponse({"like": "your like ok"})
+            return JsonResponse({"status": "like successfully!"})
         except:
             pass
-        return JsonResponse({"Error": "Your like not Found"})
+        return JsonResponse({"status": "Error"})

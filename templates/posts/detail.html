@@ -8,6 +8,21 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Detail {{ user.username }}</title>
     <link type="text/css" rel="stylesheet" href="{% static "css/font-awesome.min.css" %}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        #comment-submit-id {
+            transition: 2s;
+            background-color: #3897f0;
+            width: 45px;
+            height: 45px;
+        }
+
+        #comment-submit-id:hover {
+            background-color: turquoise;
+            width: 80px;
+            height: 80px;
+        }
+    </style>
 </head>
 <body>
 <div style="display: flex; flex-direction: column;">
@@ -40,30 +55,100 @@
             {% csrf_token %}
             <textarea name="text" id="comment-textarea-id" class="comment-textarea"
                       placeholder="Comment here" rows="10" cols="70"></textarea>
-            <button class="comment-submit" id="comment-submit-id" type="submit">post</button>
+            <button id="comment-submit-id" type="submit">post</button>
         </form>
     </div>
 </div>
-<div id="comments-container-id">
-  <div class="comments">
-    <div class="comment-profile">
-        <img src="" alt="">
-    </div>
-    <div class="comment-main">
-        <div class="comment-text">
-            <a class="user" href=""><strong></strong></a>
-        </div>
-        <div class="comment-info">
-            <div class="comment-date"></div>
-            <div class="comment-likes">
-                <span class="like-counts"></span> <span class="like-word">Likes</span>
-                <span class="like-counts"></span> <span class="like-word">Like</span>
+<div id="conmment-container-id">
+    {% for cm in post.comments.all %}
+        <div class="comments">
+            <div class="comment-profile">
+                {% if cm.user.photo %}
+                    <div class="profile-image">
+                        <img width="100" src="{{ cm.user.photo.url }}" class="gallery-image">
+                    </div>
+                {% else %}
+                    <div class="profile-image">
+                        <img width="100"
+                             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtuphMb4mq-EcVWhMVT8FCkv5dqZGgvn_QiA&usqp=CAU">
+                    </div>
+                {% endif %}
             </div>
-            <div class="comment-reply">Reply</div>
+            <div class="comment-main" style="padding: 10px">
+                <div class="comment-text">
+                    <a class="user" style="text-decoration: none; color: #4d90fe"
+                       href="{% url 'profile' cm.user %}"><strong>{{ cm.user }}: </strong></a>
+                    {{ cm.text }}
+                </div>
+                <div class="comment-info" style="margin-top: 10px">
+                    <div class="comment-date" style="margin-top: 10px">{{ cm.release_date|timesince }}</div>
+                    <div class="comment-reply" style="margin-top: 10px">Reply</div>
+                </div>
+            </div>
         </div>
-    </div>
-
+    {% endfor %}
+</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js"></script>
+
+{# commit in post #}
+<script>
+    let submit = document.getElementById("comment-submit-id")
+    let textarea = document.getElementById("comment-textarea-id")
+    let containerId = document.getElementById("conmment-container-id")
+    let commentDate = document.getElementsByClassName("comment-date")
+
+    for (let item = 0; item < commentDate.length; item++) {
+        commentDate[item].textContent = commentDate[item].textContent.split(",")[0]
+    }
+
+    submit.addEventListener("click", (ev) => {
+        ev.preventDefault()
+        let cmfd = new FormData();
+        cmfd.append("text", textarea.value)
+        cmfd.append("csrfmiddlewaretoken", "{{ csrf_token }}")
+        axios.post("", cmfd).then(() => {
+            let _html = containerId.innerHTML;
+            containerId.innerHTML = "";
+            containerId.innerHTML += `
+             <div class="comments animate__animated animate__fadeInDown">
+            <div class="comment-profile">
+            {% if request.user.photo %}
+                <div class="profile-image">
+                    <img width="100" src="{{ request.user.photo.url }}" class="gallery-image">
+                </div>
+            {% else %}
+                <div class="profile-image">
+                    <img width="100" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtuphMb4mq-EcVWhMVT8FCkv5dqZGgvn_QiA&usqp=CAU">
+                </div>
+            {% endif %}
+            </div>
+            <div class="comment-main" style="padding: 10px">
+                <div class="comment-text">
+                    <a class="user" style="text-decoration: none; color: #4d90fe"
+                       href="{% url 'profile' request.user %}"><strong>{{ request.user }}: </strong></a>
+                    ${textarea.value}
+                </div>
+                <div class="comment-info" style="margin-top: 10px">
+                    <div class="comment-date" style="margin-top: 10px">os</div>
+                    <div class="comment-likes" style="margin-top: 10px; color: mediumvioletred; opacity: 0.8">
+                        0 Like
+                    </div>
+                    <div class="comment-reply" style="margin-top: 10px">Reply</div>
+                </div>
+            </div>
+              <div class="comment-like" data-id="" data-action="">
+                    <i class="fa fa-heart-o"></i>
+             </div>
+           </div>`;
+            containerId.innerHTML += _html
+            textarea.value = ""
+        }).catch(() => {
+            console.log("bad request")
+        })
+    })
+</script>
+
+{# likes in post #}
 <script>
     let btn_Like = document.querySelector("i");
     btn_Like.addEventListener("click", e => {
