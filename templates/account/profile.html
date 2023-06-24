@@ -47,9 +47,9 @@
                     <a class="btn profile-edit-btn" href="{% url "profile_edit" %}" style="text-decoration: none"
                        target="_blank">ویرایش پروفایل</a>
                     <button class="btn profile-settings-btn" aria-label="profile settings" onclick="create_post()"><i
-                        class="fa fa-plus-square"
-                        aria-hidden="true"></i>
-                </button>
+                            class="fa fa-plus-square"
+                            aria-hidden="true"></i>
+                    </button>
                 {% endif %}
                 <button class="btn profile-settings-btn" aria-label="profile settings"><i class="fa fa-cog"
                                                                                           aria-hidden="true"></i>
@@ -75,7 +75,7 @@
 <main>
     <div class="container">
         <div class="gallery">
-            {% for post in user.user_post.all %}
+            {% for post in posts %}
                 <a class="gallery-item" tabindex="0" href="{{ post.get_absolute_url }}">
                     <img src="{{ post.image.url }}" class="gallery-image" alt="">
                     <div class="gallery-item-info">
@@ -94,10 +94,51 @@
             {% endfor %}
         </div>
         <!-- End of gallery -->
-        <div class="loader"></div>
+        {#<div class="loader"></div>#}
     </div>
     <!-- End of container -->
 </main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js"></script>
+<script>
+    let container = document.getElementsByClassName("container")[1];
+    let gallery = document.getElementsByClassName("gallery")[0];
+    let page = 1;
+    let emptyPage = false;
+    let blockRequest = false;
+
+    document.addEventListener("scroll", () => {
+        let contentHeight = window.innerHeight;
+        let yoffset = window.pageYOffset;
+        let clienHeight = document.body.clientHeight;
+        let galleryItems = document.getElementsByClassName("gallery-item");
+
+        if (contentHeight + yoffset > clienHeight + 10 && emptyPage == false && blockRequest == false) {
+            blockRequest = true
+            page += 1
+            axios.get("", {
+                params: {
+                    page: page
+                }
+            }).then((result) => {
+                if (result.data.status === "empty") {
+                    emptyPage = true
+                } else {
+                    gallery.innerHTML += result.data.status
+                    blockRequest = false
+                    window.setTimeout(() => {
+                        for (let i = 0; i < galleryItems.length; i++) {
+                            if (galleryItems[i].classList.contains("animate__fadeInUp")) {
+                                galleryItems[i].classList.remove("animate__fadeInUp")
+                            }
+                        }
+                    }, 1000)
+                }
+            }).catch((error) => {
+                console.log("Error")
+            })
+        }
+    })
+</script>
 <script src="{% static "javascript/sweatalert.min.js" %}"></script>
 <script>
     let create_post = () => {

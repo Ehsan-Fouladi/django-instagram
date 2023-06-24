@@ -7,6 +7,10 @@ from django.contrib import messages
 from random import randint
 from .models import User
 from post.forms import PostCreateForm
+from post.models import Post
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.http import JsonResponse
+from django.template.loader import render_to_string
 
 
 def LoginUser(request):
@@ -75,11 +79,22 @@ def Verify_Register(request):
 @login_required
 def Profile(reqeust, username):
     form = PostCreateForm()
+    user = User.objects.get(username=username)
+    posts = Post.objects.filter(user=user).order_by("-created")
+    paginator = Paginator(posts, 6)
     try:
-        user = User.objects.get(username=username)
-    except:
-        return render(reqeust, "account/not_user.html")
-    return render(reqeust, "account/profile.html", {"user": user, "form": form})
+        page = reqeust.GET.get("page")
+        if page:
+            posts = paginator.page(page)
+            return JsonResponse(
+                {"status": render_to_string("account/profile_posts.html", {"posts": posts}, request=reqeust)})
+        else:
+            posts = paginator.page(1)
+    except PageNotAnInteger:
+        posts = paginator.page(1)
+    except EmptyPage:
+        return JsonResponse({"status": "empty"})
+    return render(reqeust, "account/profile.html", {"user": user, "form": form, "posts": posts})
 
 
 @login_required
