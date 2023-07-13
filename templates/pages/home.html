@@ -1,0 +1,263 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>instagram {{ user }}</title>
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.0.6/dist/css/splide.min.css">
+</head>
+<body>
+    <section>
+        <div class="header">
+            <div class="header-container">
+                <div class="logo">
+                    <img src="{% static 'img/Instagram_logo.svg.png' %}" alt="logo">
+                </div>
+                <div class="serachbar">
+                    <input type="search" name="" id="" placeholder="Search">
+                </div>
+                <div class="icons">
+                    <a href="{% url 'home:home' %}" class="home">
+                        <i class='fa fa-home'></i>
+                    </a>
+                    <div class="send">
+                        <i class='fa fa-paper-plane'></i>
+                    </div>
+                    <div class="add">
+                        <i class='fa fa-plus-square'></i>
+                    </div>
+                    <a href="" class="explore">
+                        <i class='fa fa-compass'></i>
+                    </a>
+                    <div class="heart">
+                        <i class='fa fa-heart'></i>
+                    </div>
+                    <div class="profile profile-box">
+                        <img class="profile-box" src="{{ user.photo.url }}" alt="">
+                    </div>
+            </div>
+        </div>
+    </section>
+    
+    <div class="main-container">
+        <div class="main-page">
+            <!-- story part -->
+            <div class="story">
+                <section class="splide" aria-labelledby="carousel-heading">
+                    <div class="splide__track">
+                        <ul class="splide__list">
+                            <a href="">
+                                <li class="splide__slide">
+                                    <img src="{{user.photo.url}}" alt="user">
+                                    <span class="story-username"></span>
+                                </li>
+                            </a>
+                        </ul>
+                    </div>
+                </section>
+            </div>
+    
+            <!-- posts part -->
+            <div class="posts">
+               {% for post in post %}
+                <!-- post template -->
+                <div class="post_in_main">
+                    <div class="post-owner-details">
+                        <div class="post-owner-details-img">
+                            <a href="{% url 'profile' user %}">
+                                <img src="{{ post.user.photo.url }}" alt="">
+                            </a>
+                        </div>
+                        <div class="post-owner-details-profile">
+                            <div class="post-owner-details-profile-name">{{post.user}}</div>
+                            <div class="post-owner-details-profile-loaction">Isfahan</div>
+                        </div>
+                        <div></div>
+                        <div class="post-owner-details-settings">
+                            ...
+                        </div>
+                    </div>
+                    <a href="{% url "post:detail" post.id post.slug %}" class="post-main">
+                        <img src="{{ post.image.url }}" alt="">
+                    </a>
+                    <div class="post-actions">
+                        <div class="heart-family">
+                            <i class="fa fa-heart"></i>
+                            <i class="fa fa-comment"></i>
+                            <i class="fa fa-paper-plane"></i>
+                        </div>
+                        <div class="bookmark-family">
+                            <i class="fa fa-bookmark"></i>
+                        </div>
+                    </div>
+
+                    {% if user_like.all|length %}
+                    <div class="post-likes">
+                        {{post.user_like.all|length}} likes
+                    </div>
+                  {% else %}
+                    <div class="post-likes">
+                        {{post.user_like.all|length}} like
+                    </div>
+                  {% endif %}
+                
+                    <div class="post-caption">
+                        <a href="#" class="post-caption-username">{{post.user}}</a>
+                        <span class="post-caption-main">{{post.caption}}</span>
+                        <a href="#" class="more-caption">more</a>
+                    </div>
+                    <div class="post-view-comments">
+                        {% if post.comments.all|length > 0 %}
+                        <a href="#">View all {{post.comments.all|length}} comments</a>
+                        {% endif %}
+                    </div>
+                    <div class="post-date">{{post.created|timesince}}</div>
+                    <div class="post-add-comment"> 
+                        <div class="emoji">
+                            <a href=""><i class='fa fa-smile-o'></i></a>
+                        </div>
+                        <div class="poast-comment-input">
+                            <input type="text" placeholder="Add a comment...">
+                        </div>
+                        <div class="post-key">
+                            <button>Post</button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    
+        <!-- side bar -->
+        <div class="side-nav">
+            <div class="self-profile-container">
+                <div class="self-profile">
+                    <div class="self-profile-image">
+                        <img src="{{user.photo.url}}" alt="">
+                    </div>
+                    <div class="self-profile-details">
+                        <span class="profile-details-username">
+                            <a href="#">{{ user }}</a>
+                        </span>
+                        {% if user.first_name %}{{user.first_name}}{% endif %}
+                        {% if user.last_name %}{{user.last_name}}{% endif %}
+                    </div>
+                </div>
+                <!-- buttons -->
+                <div class="side-nav-btn">
+                    <button>Switch</button>
+                </div>
+            </div>
+    
+            <div class="suggetsion">
+                <div class="suggestion-text-main">
+                    <div class="suggest-text">
+                        Suggestions For You
+                    </div>
+                    <div class="suggest-see-all">
+                        <button>See All</button>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- suggest friends -->
+    
+            <div class="friend-suggest-container">
+                <a href="" class="friend-suggest-image">
+                    <img src="" alt="">
+                </a>
+                <div class="friend-suggest-info">
+                    <a href="" class="friend-suggest-info-username">
+                       
+                    </a>
+                    <div class="friend-suggest-info-followed-by">
+                        
+                    </div>
+                </div>
+    
+                <div class="friend-suggest-follow-btn">
+                    <button>Follow</button>
+                </div>
+            </div>
+        </div>
+  
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.0.6/dist/js/splide.min.js"></script>
+    <script>
+        var splide = new Splide('.splide', {
+            // type: 'loop',
+            drag: 'free',
+            snap: true,
+            perPage: 6,
+        });
+    
+        splide.mount();
+    </script>
+    
+    <script>
+        // caption show more
+        let caption = document.getElementsByClassName("post-caption-main");
+        let more = document.getElementsByClassName("more-caption");
+        for (let item in caption) {
+            let captionText = (caption[item].innerText).trim();
+            if (captionText.trim().length > 10) {
+                caption[item].innerHTML = captionText.slice(0, 10) + "...";
+            } else {
+                more[item].remove();
+                console.log(more.innerText)
+            }
+        }
+    </script>
+    <!-- ajax script -->
+    <script>
+        let page = 1;
+        let emptyPage = false;
+        let blockRequest = false;
+        let posts_container = document.getElementsByClassName("posts")[0];
+    
+        document.addEventListener("scroll", function () {
+            let contentHeight = window.innerHeight;
+            let yOffset = window.pageYOffset;
+            let clientHight = document.body.clientHeight;
+    
+            if (yOffset > (clientHight * 6) / 10 && emptyPage == false && blockRequest == false) {
+                blockRequest = true;
+                page += 1;
+                axios.get("", {
+                    params: {
+                        page: page,
+                    }
+                }).then((result) => {
+                    if (result.data.status === "empty") {
+                        emptyPage = true;
+                        console.log("empty")
+                    }
+                    posts_container.innerHTML += result.data.status;
+                    // caption show more
+                    try {
+                        let caption = document.getElementsByClassName("post-caption-main");
+                        let more = document.getElementsByClassName("more-caption");
+                        for (let item in caption) {
+                            let captionText = (caption[item].innerText).trim();
+                            if (captionText.trim().length > 10) {
+                                caption[item].innerHTML = captionText.slice(0, 10) + "...";
+                            } else {
+                                more[item].remove();
+                                console.log(more.innerText)
+                            }
+                        }
+                    }
+                    catch {
+    
+                    }
+                    blockRequest = false;
+                }).catch((err) => {
+                    console.log(err)
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -5,13 +5,13 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from random import randint
-from .models import User
+from .models import User, Contact
 from post.forms import PostCreateForm
 from post.models import Post
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import JsonResponse
 from django.template.loader import render_to_string
-
+from django.views.decorators.http import require_POST
 
 def LoginUser(request):
     if request.method == "POST":
@@ -110,3 +110,20 @@ def ProfileEdit(reqeust):
     else:
         form = ProfileForms(instance=reqeust.user)
     return render(reqeust, "account/edit_profile.html", {"form": form})
+
+@login_required
+@require_POST
+def user_follow(request):
+    user_id = request.POST.get("id")
+    action = request.POST.get("id")
+    if user_id and action:
+        try:
+            user = User.objects.get(id=user_id)
+            if action == "follow":
+                Contact.objects.get_or_create(user_from=request.user, user_to=user)
+            else:
+                Contact.objects.filter(user_from=request.user, user_to=user).delete()
+            return JsonResponse({"status" : "successfully"})
+        except:
+            return JsonResponse({"status": "error"})
+    return JsonResponse({"status": "error"})

@@ -50,6 +50,10 @@
                             class="fa fa-plus-square"
                             aria-hidden="true"></i>
                     </button>
+                    {% else %}
+                        <button id="follow-btn-id" data-id="{{user.id}}" data-action="{% if request.user in user.followers.all %}unfollow{% else %}follow{% endif %}" style="font-family: cursive; font-size: medium; font-weight: revert; text-decoration: none; background-color: blue; color: white; padding: 6px; border-radius: 20%">
+                            {% if request.user in user.followers.all %}Unfollow{% else %}Follow{% endif %}
+                        </button>
                 {% endif %}
                 <button class="btn profile-settings-btn" aria-label="profile settings"><i class="fa fa-cog"
                                                                                           aria-hidden="true"></i>
@@ -58,8 +62,8 @@
             <div class="profile-stats">
                 <ul>
                     <li><span class="profile-stat-count">{{ user.user_post.all|length }}</span> ارسال</li>
-                    <li><span class="profile-stat-count">188</span> دنبال کننده</li>
-                    <li><span class="profile-stat-count">206</span> دنبال شده</li>
+                    <li><span class="profile-stat-count">{{ user.followers.all|length }}</span> دنبال کننده</li>
+                    <li><span class="profile-stat-count">{{user.following.all|length }}</span> دنبال شده</li>
                 </ul>
             </div>
             <div class="profile-bio">
@@ -86,7 +90,7 @@
                                 {{ post.user_like.all|length }}
                             </li>
                             <li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i
-                                    class="fa fa-comment" aria-hidden="true"></i> 2
+                                    class="fa fa-comment" aria-hidden="true"></i>
                             </li>
                         </ul>
                     </div>
@@ -99,6 +103,29 @@
     <!-- End of container -->
 </main>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js"></script>
+<script>
+    let btn_follow = document.getElementById("follow-btn-id")
+    btn_follow.addEventListener("click", (e)=>{
+        let follow_action = btn_follow.getAttribute("data-action")
+        let fd = new FormData();
+        e.preventDefault();
+        fd.append("id", btn_follow.getAttribute("data-id"));
+        fd.append("action", btn_follow.getAttribute("data-action"));
+        fd.append("csrfmiddlewaretoken", "{{ csrf_token }}");
+        axios.post("/account/follow/", fd).then((res)=>{
+            console.log(follow_action);
+            if(follow_action === "follow"){
+                btn_follow.innerHTML = "Unfollow"
+                btn_follow.setAttribute("data-action", "unfollow")
+            }else{
+                btn_follow.innerHTML = "Follow"
+                btn_follow.setAttribute("data-action", "follow")
+            }
+        }).catch((res)=>{
+            console.log(res);
+        })
+    })
+</script>
 <script>
     let container = document.getElementsByClassName("container")[1];
     let gallery = document.getElementsByClassName("gallery")[0];
