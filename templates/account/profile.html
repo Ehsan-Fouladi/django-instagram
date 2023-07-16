@@ -62,8 +62,8 @@
             <div class="profile-stats">
                 <ul>
                     <li><span class="profile-stat-count">{{ user.user_post.all|length }}</span> ارسال</li>
-                    <li><span class="profile-stat-count">{{ user.followers.all|length }}</span> دنبال کننده</li>
-                    <li><span class="profile-stat-count">{{user.following.all|length }}</span> دنبال شده</li>
+                    <li><span class="profile-stat-count" id="follwers-id">{{ user.followers.all|length }}</span> دنبال کننده</li>
+                    <li><span class="profile-stat-count" id="follwing-id">{{user.following.all|length }}</span> دنبال شده</li>
                 </ul>
             </div>
             <div class="profile-bio">
@@ -89,8 +89,8 @@
                                     aria-hidden="true"></i>
                                 {{ post.user_like.all|length }}
                             </li>
-                            <li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i
-                                    class="fa fa-comment" aria-hidden="true"></i>
+                            <li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i class="fa fa-comment" aria-hidden="true"></i>
+                                {{post.comments.all|length}}
                             </li>
                         </ul>
                     </div>
@@ -105,6 +105,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js"></script>
 <script>
     let btn_follow = document.getElementById("follow-btn-id")
+    let followers_counts = document.getElementById("follwers-id");
+
     btn_follow.addEventListener("click", (e)=>{
         let follow_action = btn_follow.getAttribute("data-action")
         let fd = new FormData();
@@ -117,9 +119,11 @@
             if(follow_action === "follow"){
                 btn_follow.innerHTML = "Unfollow"
                 btn_follow.setAttribute("data-action", "unfollow")
+                followers_counts.innerHTML = parseInt(followers_counts.innerHTML) + 1;
             }else{
                 btn_follow.innerHTML = "Follow"
                 btn_follow.setAttribute("data-action", "follow")
+                followers_counts.innerHTML = parseInt(followers_counts.innerHTML) -1;
             }
         }).catch((res)=>{
             console.log(res);

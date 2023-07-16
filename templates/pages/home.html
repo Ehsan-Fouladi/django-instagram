@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{% static 'css/home.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.0.6/dist/css/splide.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 </head>
 <body>
     <section>
@@ -162,19 +163,24 @@
                     </div>
                 </div>
             </div>
-    
+
             <!-- suggest friends -->
-    
+            {% for su in suggest %}
             <div class="friend-suggest-container">
                 <a href="" class="friend-suggest-image">
-                    <img src="" alt="">
+                    <img src="{{su.photo.url}}" alt="{{su}}">
                 </a>
                 <div class="friend-suggest-info">
                     <a href="" class="friend-suggest-info-username">
-                       
+                       {{su}}
                     </a>
                     <div class="friend-suggest-info-followed-by">
-                        
+                        Followed by
+                        {% for account in suggest.followers.all %}
+                            {% if account in user.following.all %}
+                                {{account}}
+                            {% endif %}
+                        {% endfor %}
                     </div>
                 </div>
     
@@ -182,7 +188,45 @@
                     <button>Follow</button>
                 </div>
             </div>
+            {% endfor %}
         </div>
+
+        <div class="actions-container animate__animated">
+            {% for action in actions %}
+            <div class="action">
+                <div class="action-user-image">
+                    <a href="{% url 'profile' action.user %}">
+                        <img src="{{action.user.photo.url}}" alt="">
+                    </a>
+                </div>
+                <div class="action-act">
+                    
+                    {% if action.act %}
+                        {{action.act}}
+                    {% endif %}
+                        
+                </div>
+                <div class="action-target">
+                    {% if action.act == "follow" or action.act == "unfollow" %}
+                    <a href="{% url 'profile' action.target %}">
+                        <img src="{{action.target.photo.url}}" alt="">
+                    </a>
+                    {% elif action.act == "likes" or  action.act == "posted" %}
+                    <a href="{{action.target.get_absolute_url}}">
+                        <img src="{{action.target.image.url}}" alt="">
+                    </a>
+                    {% endif %}
+                    
+                </div>
+                <div class="action-date">
+                    {{action.created|timesince}} ago
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        </div>
+    </div>
+    
   
     <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.0.6/dist/js/splide.min.js"></script>
     <script>

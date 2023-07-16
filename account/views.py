@@ -12,6 +12,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_POST
+from actions.utils import create_action
 
 def LoginUser(request):
     if request.method == "POST":
@@ -115,14 +116,16 @@ def ProfileEdit(reqeust):
 @require_POST
 def user_follow(request):
     user_id = request.POST.get("id")
-    action = request.POST.get("id")
+    action = request.POST.get("action")
     if user_id and action:
         try:
             user = User.objects.get(id=user_id)
             if action == "follow":
                 Contact.objects.get_or_create(user_from=request.user, user_to=user)
+                create_action(request.user, "follow", user)
             else:
                 Contact.objects.filter(user_from=request.user, user_to=user).delete()
+                create_action(request.user, "unfollow", user)
             return JsonResponse({"status" : "successfully"})
         except:
             return JsonResponse({"status": "error"})
