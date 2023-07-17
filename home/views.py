@@ -23,3 +23,8 @@ def home(request):
                 suggest_list |= suggest_user
     suggest_list = suggest_list[:10]
     return render(request, "pages/home.html", {"post": posts, "action": actions, "suggest": suggest_list})
+
+def explore(request):
+    posts = Post.objects.order_by("-total_likes")
+    context = {"posts" : posts}
+    return render(request, template_name="pages/explore.html", context=context)

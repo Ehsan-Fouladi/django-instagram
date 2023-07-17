@@ -15,6 +15,7 @@ class Post(models.Model):
     edit_time = models.DateTimeField(auto_now=True)
     slug = models.SlugField(blank=True, max_length=300)
     user_like = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="post_like", blank=True)
+    total_likes = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return str(self.user) + " " + str(datetime.now())
